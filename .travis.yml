@@ -1,0 +1,27 @@
+language: go
+go:
+- 1.x
+services: docker
+
+env:
+  global:
+  - KINESIS_ENDPOINT="localhost:4568"
+
+before_install:
+# Initialize localstack
+- docker-compose up -d
+# Download the dependencies
+- export GO111MODULE=on
+- go mod download
+- go mod vendor
+- go mod verify
+- go get github.com/mattn/goveralls
+- go get golang.org/x/tools/cmd/cover
+
+script:
+- curl --silent -OL https://raw.githubusercontent.com/vishnubob/wait-for-it/8ed92e8cab83cfed76ff012ed4a36cef74b28096/wait-for-it.sh
+- chmod a+x wait-for-it.sh && ./wait-for-it.sh $KINESIS_ENDPOINT
+- "$HOME/gopath/bin/goveralls -service=travis-ci -v"
+
+after_script:
+- docker-compose down

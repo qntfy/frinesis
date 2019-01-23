@@ -1,0 +1,10 @@
+version: '3'
+
+services:
+  localstack:
+    image: localstack/localstack
+    environment:
+      SERVICES: kinesis:4568
+      HOSTNAME_EXTERNAL: 127.0.0.1
+    ports:
+      - 4568:4568
