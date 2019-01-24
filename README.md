@@ -17,9 +17,24 @@ Frizzle is a magic message (`Msg`) bus designed for parallel processing w many g
   * Do your processing, possibly `Send()` each `Msg` on to one or more `Sink` destinations
   * `Ack()` (or `Fail()`) the `Msg`  to notify the `Source` that processing completed
 
+## Prereqs / Build instructions
+
+### Go mod
+
+As of Go 1.11, frinesis uses [go mod](https://github.com/golang/go/wiki/Modules) for dependency management.
+
 ## Running the tests
 
-`go test -v --cover ./...`
+Frinesis has integration tests which require a kinesis endpoint to test against. `KINESIS_ENDPOINT` environment variable is
+used by tests. We test with a [localstack](https://localstack.cloud/) instance (`docker-compose.yml` provided) but other
+tools like `kinesalite` could also work.
+
+```
+$ docker-compose up -d
+# takes a few seconds to initialize; can use a tool like wait-for-it.sh in scripting
+$ export KINESIS_ENDPOINT=localhost:4568
+$ go test -v --cover ./...
+```
 
 ## Configuration
 Frinesis Sinks are configured using [Viper](https://godoc.org/github.com/spf13/viper).
