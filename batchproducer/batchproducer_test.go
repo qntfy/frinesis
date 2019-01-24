@@ -480,7 +480,7 @@ func TestRecordsDroppedStatWhenSomeRecordsFail(t *testing.T) {
 	b.Add([]byte("foo"), "fail")
 	b.Add([]byte("foo"), "fail")
 
-	// Sleep long enough for an attempt to be tried and the stat to be recieved
+	// Sleep long enough for an attempt to be tried and the stat to be received
 	time.Sleep(5 * time.Millisecond)
 
 	if sr.totalRecordsDroppedSinceLastStat != 2 {
