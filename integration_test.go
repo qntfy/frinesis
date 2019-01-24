@@ -158,7 +158,6 @@ func stringSliceToMap(slice []string) map[string]int {
 
 func (s *sinkTestSuite) TestSend() {
 	expectedMessages := []string{"time", "to", "test out", "our", "kinesis stream!"}
-	receivedMessages := []string{}
 	s.T().Log(s.topic)
 
 	for _, m := range expectedMessages {
@@ -169,13 +168,12 @@ func (s *sinkTestSuite) TestSend() {
 		s.Fail("sink close failed", err.Error())
 	}
 
-	receivedMessages = s.getRecords(len(expectedMessages))
+	receivedMessages := s.getRecords(len(expectedMessages))
 	s.Equal(stringSliceToMap(expectedMessages), stringSliceToMap(receivedMessages))
 }
 
 func (s *sinkTestSuite) TestRestart() {
 	expectedMessages := []string{"testing", "a restart", "between", "message sends"}
-	receivedMessages := []string{}
 	s.T().Log(s.topic)
 
 	s.sendToSink(expectedMessages[0])
@@ -195,6 +193,6 @@ func (s *sinkTestSuite) TestRestart() {
 		s.Fail("sink restart failed", err.Error())
 	}
 
-	receivedMessages = s.getRecords(len(expectedMessages))
+	receivedMessages := s.getRecords(len(expectedMessages))
 	s.Equal(stringSliceToMap(expectedMessages), stringSliceToMap(receivedMessages))
 }

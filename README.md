@@ -1,5 +1,12 @@
 # frinesis
 
+[![Travis Build Status](https://img.shields.io/travis/qntfy/frinesis.svg?branch=master)](https://travis-ci.org/qntfy/frinesis)
+[![Coverage Status](https://coveralls.io/repos/github/qntfy/frinesis/badge.svg?branch=master)](https://coveralls.io/github/qntfy/frinesis?branch=master)
+[![MIT licensed](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE)
+[![GitHub release](https://img.shields.io/github/release/qntfy/frinesis.svg?maxAge=3600)](https://github.com/qntfy/frinesis/releases/latest)
+[![Go Report Card](https://goreportcard.com/badge/github.com/qntfy/frinesis)](https://goreportcard.com/report/github.com/qntfy/frinesis)
+[![GoDoc](https://godoc.org/github.com/qntfy/frinesis?status.svg)](http://godoc.org/github.com/qntfy/frinesis)
+
 An AWS Kinesis implementation of a [Frizzle](https://github.com/qntfy/frizzle) Sink.
 
 In addition to the AWS Kinesis SDK for Go, Frinesis uses a modified version of

@@ -103,7 +103,7 @@ func (s *Sink) addTopicProducer(topic string) (batchproducer.Producer, error) {
 	return prod, nil
 }
 
-// Events reports async Events that occur durring processing
+// Events reports async Events that occur during processing
 func (s *Sink) Events() <-chan frizzle.Event {
 	return (<-chan frizzle.Event)(s.evtChan)
 }
