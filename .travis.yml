@@ -13,7 +13,6 @@ before_install:
 # Download the dependencies
 - export GO111MODULE=on
 - go mod download
-- go mod vendor
 - go mod verify
 - go get github.com/mattn/goveralls
 - go get golang.org/x/tools/cmd/cover
