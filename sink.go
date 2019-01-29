@@ -99,7 +99,7 @@ func (s *Sink) addTopicProducer(topic string) (batchproducer.Producer, error) {
 		}
 	}()
 
-	s.prods["topic"] = prod
+	s.prods[topic] = prod
 	return prod, nil
 }
 
