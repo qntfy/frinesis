@@ -288,7 +288,9 @@ func (b *batchProducer) Events() <-chan Event {
 // from/for interface Producer
 // TODO: send all batches in parallel, will require broader refactoring
 func (b *batchProducer) Flush(timeout time.Duration, sendStats bool) (int, int, error) {
-	b.Stop()
+	if err := b.Stop(); err != nil {
+		return 0, 0, err
+	}
 
 	timer := time.NewTimer(timeout)
 	if timeout == 0 {
@@ -365,14 +367,14 @@ func (b *batchProducer) sendBatch(batchSize int) int {
 	b.consecutiveErrors = 0
 	b.currentDelay = 0
 	var succeeded int
-	if res.FailedRecordCount == nil {
+	if res.FailedRecordCount == nil || *res.FailedRecordCount == 0 {
 		succeeded = len(records)
 		b.logger.Debug(fmt.Sprintf("PutRecords request succeeded: sent %v records to Kinesis stream %v", succeeded, b.streamName))
 	} else {
 		// note *int64 to int conversion - in practice we never expect 2 billion failed records
 		// in a single call since API only supports 500 records per call
 		succeeded = len(records) - int(*res.FailedRecordCount)
-		b.logger.Debug(fmt.Sprintf("Partial success when sending a PutRecords request to Kinesis stream %v: %v succeeded, %v failed. Re-enqueueing failed records.", b.streamName, succeeded, res.FailedRecordCount))
+		b.logger.Debug(fmt.Sprintf("Partial success when sending a PutRecords request to Kinesis stream %v: %v succeeded, %v failed. Re-enqueueing failed records.", b.streamName, succeeded, int(*res.FailedRecordCount)))
 		// returnSomeFailedRecordsToBuffer can block if the buffer (channel) if full so we’ll
 		// call it in a goroutine. This might be problematic WRT ordering. TODO: revisit this.
 		go b.returnSomeFailedRecordsToBuffer(res, records)
