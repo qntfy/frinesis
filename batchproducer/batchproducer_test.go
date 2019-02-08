@@ -154,6 +154,24 @@ func TestStopWhenStopped(t *testing.T) {
 	}
 }
 
+func TestFlushWhenStopped(t *testing.T) {
+        t.Parallel()
+        config := Config{
+                BufferSize:    100,
+                FlushInterval: 0,
+                BatchSize:     10,
+        }
+        b, err := New(&mockBatchingClient{}, "foo", config)
+        if err != nil {
+                t.Fatalf("%v != nil", err)
+        }
+
+        _, _, err = b.Flush(100, false)
+        if err == nil {
+                t.Errorf("%v == nil", err)
+        }
+}
+
 func TestSuccessiveStartsAndStops(t *testing.T) {
 	t.Parallel()
 	config := Config{
@@ -722,13 +740,10 @@ func TestFlushWithTimeout(t *testing.T) {
 	b := newProducer(c, 1000, 0, 10)
 
 	// set running to true so Add will succeed
-	b.running = true
+	b.Start()
 
 	// Adding 600 will enqueue 2 batches
 	b.addRecordsAndWait(600, 0)
-
-	// back to normal
-	b.running = false
 
 	// This should lead to only 1 batch of 500 being sent by Flush
 	timeout := 5 * time.Millisecond
@@ -763,13 +778,10 @@ func TestFlushWithoutTimeout(t *testing.T) {
 	b := newProducer(c, 1000, 0, 10)
 
 	// set running to true so Add will succeed
-	b.running = true
+	b.Start()
 
 	// Adding 600 will enqueue 2 batches
 	b.addRecordsAndWait(600, 0)
-
-	// back to normal
-	b.running = false
 
 	// This should lead to batches of 500 and 100 being sent by Flush
 	timeout := 0 * time.Millisecond
